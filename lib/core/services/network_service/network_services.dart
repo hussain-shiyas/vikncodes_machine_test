@@ -30,7 +30,7 @@ class NetworkService {
       final response = await http.post(
         Uri.parse(endpoint),
         headers: _headers,
-        body: body,
+        body: jsonEncode(body),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -43,8 +43,8 @@ class NetworkService {
     }
   }
   Map<String, String> get _headers => {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Access-Control-Allow-Origin':'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-    if (StorageServiceMixin().getData<String?>(MainBoxKeys.token) != null) 'Authorization': 'Bearer ${StorageServiceMixin().getData(MainBoxKeys.token)}',
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    if (StorageServiceMixin().getData<String?>(MainBoxKeys.token) != null) 'Authorization': 'Bearer ${StorageServiceMixin().getData<String>(MainBoxKeys.token) ?? ''}',
   };
 }

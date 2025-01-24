@@ -1,8 +1,15 @@
 import 'dart:developer';
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:vikncodes_machine_test/ui/sales_list_screen/domain/model/sales_list_res_model.dart';
 
-enum MainBoxKeys { token , userId}
+enum MainBoxKeys {
+  token,
+  userId,
+  salesList,
+  profileData,
+  loginData,
+}
 
 mixin class StorageServiceMixin {
   static late Box? mainBox;
@@ -10,7 +17,8 @@ mixin class StorageServiceMixin {
 
   static Future<void> initHive() async {
     await Hive.initFlutter();
-
+    Hive.registerAdapter(SalesListResModelAdapter());
+    Hive.registerAdapter(SalesDataAdapter());
     mainBox = await Hive.openBox(_boxName);
   }
 
@@ -33,5 +41,10 @@ mixin class StorageServiceMixin {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  void clearData() async {
+    removeData(MainBoxKeys.userId);
+    removeData(MainBoxKeys.token);
   }
 }

@@ -1,13 +1,14 @@
+import 'package:hive_flutter/hive_flutter.dart';
 
-import 'dart:convert';
+part 'sales_list_res_model.g.dart';
 
-SalesListResModel patientListResModelFromJson(String str) => SalesListResModel.fromJson(json.decode(str));
-
-String patientListResModelToJson(SalesListResModel data) => json.encode(data.toJson());
-
+@HiveType(typeId: 1)
 class SalesListResModel {
+  @HiveField(0)
   final int? statusCode;
+  @HiveField(1)
   final List<SalesData>? data;
+  @HiveField(2)
   final int? totalCount;
 
   SalesListResModel({
@@ -29,20 +30,35 @@ class SalesListResModel {
   };
 }
 
+@HiveType(typeId: 2)
 class SalesData {
+  @HiveField(0)
   final int? index;
+  @HiveField(2)
   final String? id;
+  @HiveField(3)
   final String? voucherNo;
+  @HiveField(4)
   final DateTime? date;
+  @HiveField(5)
   final String? ledgerName;
+  @HiveField(6)
   final double? totalGrossAmtRounded;
+  @HiveField(7)
   final double? totalTaxRounded;
-  final int? grandTotalRounded;
+  @HiveField(8)
+  final double? grandTotalRounded;
+  @HiveField(9)
   final String? customerName;
+  @HiveField(10)
   final double? totalTax;
+  @HiveField(11)
   final String? status;
-  final int? grandTotal;
+  @HiveField(12)
+  final double? grandTotal;
+  @HiveField(13)
   final bool? isBillWised;
+  @HiveField(14)
   final String? billWiseStatus;
 
   SalesData({
@@ -70,11 +86,11 @@ class SalesData {
     ledgerName: json["LedgerName"],
     totalGrossAmtRounded: json["TotalGrossAmt_rounded"]?.toDouble(),
     totalTaxRounded: json["TotalTax_rounded"]?.toDouble(),
-    grandTotalRounded: json["GrandTotal_Rounded"],
+    grandTotalRounded: json["GrandTotal_Rounded"]?.toDouble(),
     customerName: json["CustomerName"],
     totalTax: json["TotalTax"]?.toDouble(),
     status: json["Status"],
-    grandTotal: json["GrandTotal"],
+    grandTotal: json["GrandTotal"]?.toDouble(),
     isBillWised: json["is_billwised"],
     billWiseStatus: json["billwise_status"],
   );

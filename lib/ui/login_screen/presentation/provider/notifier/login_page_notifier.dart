@@ -16,11 +16,16 @@ class LoginPageNotifier extends StateNotifier<LoginPageState>
       state = data.fold(((failure) {
         return LoginPageState.failure(failure.message);
       }), (success) {
-        StorageServiceMixin()
-            .addData<String>(MainBoxKeys.token, success.data?.access ?? "");
-        StorageServiceMixin().addData<String>(
-            MainBoxKeys.userId, success.data?.userId.toString() ?? "");
-        return LoginPageSuccess(success);
+        if(success.userId==null){
+          return LoginPageState.failure("user not found");
+        }else{
+          StorageServiceMixin()
+              .addData<String>(MainBoxKeys.token, success.data?.access ?? "");
+          StorageServiceMixin().addData<String>(
+              MainBoxKeys.userId, success.data?.userId.toString() ?? "");
+          return LoginPageSuccess(success);
+        }
+
       });
     } catch (e) {
       state = const LoginPageState.failure("failure");

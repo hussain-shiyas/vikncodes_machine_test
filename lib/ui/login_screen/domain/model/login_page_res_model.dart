@@ -14,7 +14,7 @@ class LoginResModel {
   final int? userId;
   final String? role;
   final String? message;
-  final String? error;
+  final dynamic error;
   final String? username;
 
   LoginResModel({

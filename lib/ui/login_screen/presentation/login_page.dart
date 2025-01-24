@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vikncodes_machine_test/core/themes/vikn_colors.dart';
 import 'package:vikncodes_machine_test/core/themes/vikn_images.dart';
 import 'package:vikncodes_machine_test/ui/login_screen/presentation/provider/login_page_notifier_provider.dart';
+import 'package:vikncodes_machine_test/ui/login_screen/presentation/widget/login_text_field.dart';
+import 'package:vikncodes_machine_test/ui/main_screen.dart';
 import 'package:vikncodes_machine_test/ui/sales_list_screen/presentation/sales_list_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -26,10 +28,10 @@ class _HomePageState extends ConsumerState<LoginScreen> {
     ref.listen(loginPageNotifierProvider, (previous, next) {
       next.maybeWhen(
         success: (data) {
-          if ((data.data?.access == "") ?? false) {
-            Navigator.push(
+          if ((data.data?.access != "")||data.data?.access != null) {
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const SalesListScreen()),
+              MaterialPageRoute(builder: (context) => const MainScreen()),
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -64,7 +66,7 @@ class _HomePageState extends ConsumerState<LoginScreen> {
                   Image.asset(ViknImages.languageIcon),
                   Text(
                     "English",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: ViknColors.whiteColor),
                   ),
                 ],
               ),
@@ -73,11 +75,11 @@ class _HomePageState extends ConsumerState<LoginScreen> {
               ),
               const Text(
                 "Login",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: ViknColors.whiteColor),
               ),
               const Text(
                 "Login to your vikn account",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: ViknColors.loginSubtitleText),
               ),
               Form(
                 key: _formKey,
@@ -106,7 +108,7 @@ class _HomePageState extends ConsumerState<LoginScreen> {
                         labelText: "Password",
                         controller: passwordController,
                         prefixImg: ViknImages.passwordIcon,
-                        isObscureText: isPswdShown,
+                        isObscureText: !isPswdShown,
                         suffixIcon: Icon(
                           isPswdShown
                               ? Icons.visibility_outlined
@@ -148,22 +150,24 @@ class _HomePageState extends ConsumerState<LoginScreen> {
                 child: Center(
                   child: loginState.maybeWhen(
                     loading: () =>
-                        const CircularProgressIndicator(color: Colors.white),
+                        const CircularProgressIndicator(color: ViknColors.whiteColor),
                     orElse: () => Container(
+                      width: 130,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 8),
+                          horizontal: 10, vertical: 15),
                       decoration: BoxDecoration(
                         color: ViknColors.buttonColor,
+                        borderRadius: BorderRadius.circular(30)
                       ),
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "Sign in",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: ViknColors.whiteColor,fontSize: 16,fontWeight:FontWeight.bold),
                           ),
                           Icon(Icons.arrow_forward_outlined,
-                              color: Colors.white)
+                              color: ViknColors.whiteColor)
                         ],
                       ),
                     ),
@@ -173,7 +177,7 @@ class _HomePageState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 20),
               const Text(
                 "Don't have an Account?",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: ViknColors.whiteColor),
               ),
               const Text(
                 "Sign up now!",
@@ -187,43 +191,3 @@ class _HomePageState extends ConsumerState<LoginScreen> {
   }
 }
 
-class LoginTextField extends StatelessWidget {
-  final Icon? suffixIcon;
-  final String prefixImg;
-  final String labelText;
-  final VoidCallback? suffixOnTap;
-  final bool isObscureText;
-  final TextEditingController controller;
-  final String? Function(String?)? validator; // Add a validator property
-
-  const LoginTextField({
-    super.key,
-    required this.controller,
-    this.suffixIcon,
-    required this.prefixImg,
-    this.suffixOnTap,
-    this.isObscureText = false,
-    this.validator,
-    required this.labelText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        label: Text(labelText),
-        prefixIcon: Image.asset(prefixImg),
-        suffixIcon: suffixIcon != null
-            ? InkWell(
-                onTap: suffixOnTap,
-                child: suffixIcon,
-              )
-            : null,
-        border: InputBorder.none,
-      ),
-      obscureText: isObscureText,
-      validator: validator, // Apply the validator to the text field
-    );
-  }
-}
